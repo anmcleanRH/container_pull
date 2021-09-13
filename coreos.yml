@@ -18,11 +18,11 @@
         - "{{ bin_path }}"
         - "{{ release_path }}"
         - "{{ olm_dir }}"
-        - "{{ import_root }}/wget"
+        - "{{ import_root }}/aarnet"
         - "{{ registry_path }}"
       tags: init
     - name: grab coreos media
-      command: "/bin/wget --recursive --directory-prefix {{import_root}}/wget --cut-dirs 1 -R 'index.html*,*nightly*' -np {{ item }}"
+      command: "/bin/wget --recursive --directory-prefix {{import_root}}/aarnet --cut-dirs 1 -R 'index.html*,*nightly*' -np {{ item }}"
       loop:
         - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp_ver }}/{{coreos_tag}}/rhcos-openstack.x86_64.qcow2.gz"
         - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp_ver }}/{{coreos_tag}}/rhcos-metal.x86_64.raw.gz"
@@ -40,9 +40,9 @@
         src: "{{ item }}"
         dest: "{{bin_path}}"
       loop:
-        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp/{{ocp_tag}}/openshift-client-linux-{{ocp_tag}}.tar.gz"
-        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp/{{ocp_tag}}/openshift-install-linux-{{ocp_tag}}.tar.gz"
-        - "{{import_root}}/wget/mirror.openshift.com/openshift-v4/clients/ocp/{{ocp_tag}}/opm-linux-{{ocp_tag}}.tar.gz"
+        - "{{import_root}}/aarnet/mirror.openshift.com/openshift-v4/clients/ocp/{{ocp_tag}}/openshift-client-linux-{{ocp_tag}}.tar.gz"
+        - "{{import_root}}/aarnet/mirror.openshift.com/openshift-v4/clients/ocp/{{ocp_tag}}/openshift-install-linux-{{ocp_tag}}.tar.gz"
+        - "{{import_root}}/aarnet/mirror.openshift.com/openshift-v4/clients/ocp/{{ocp_tag}}/opm-linux-{{ocp_tag}}.tar.gz"
     - name: get ocp4 images
       shell: "{{bin_path}}/oc adm -a {{auth_file}} release mirror  quay.io/openshift-release-dev/ocp-release:{{ocp_tag}}-x86_64 --to-dir {{release_path}}"
       tags: 

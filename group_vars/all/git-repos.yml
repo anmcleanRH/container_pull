@@ -2,24 +2,24 @@
 git_repos:
   operators: "{{ op_gitrepos }}"
   openshift:
-    - https://github.com/openshift/openshift-ansible.git
+    - 'https://github.com/cloud-bulldozer/ripsaw.git'
+    - 'https://github.com/coreos/prometheus-operator.git'
+    - 'https://github.com/strimzi/strimzi-kafka-operator.git'
     - https://github.com/purestorage/pso-csi.git
+    - https://github.com/Wolskie/keycloak-attribute-mapper
+    - https://github.com/keycloak/keycloak
     - https://github.com/openshift/source-to-image.git
     - https://github.com/openshift/cluster-samples-operator.git
     - https://github.com/aquasecurity/trivy-db.git
     - https://github.com/aquasecurity/harbor-scanner-trivy.git
-    - https://github.com/ivanilves/lstags.git
   openstack:
     - https://github.com/openstack/heat.git
-  cfme:
-    - https://github.com/rhtconsulting/cfme-rhconsulting-scripts.git
   ceph:
-    - https://github.com/ceph/ceph-nagios-plugins.git
     - https://github.com/ceph/ceph-ansible.git
   ansible:
     - https://github.com/ansible/awx.git
   misc:
     - https://github.com/ipxe/ipxe.git
-    - https://github.com/trilioData/triliovault-cfg-scripts.git
     - https://github.com/calleerlandsson/syslog-parser.git
+    - https://github.com/ansible-lockdown/RHEL8-CIS.git
 

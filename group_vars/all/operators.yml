@@ -9,12 +9,7 @@ op_image_repos: [] # this isn't useful for operators at the moment, maybe in the
 op_gitrepos:
   - 'https://github.com/cloud-bulldozer/ripsaw.git'
   - 'https://github.com/coreos/prometheus-operator.git'
-  - 'https://github.com/integr8ly/grafana-operator.git'
-  - 'https://github.com/DirectXMan12/k8s-prometheus-adapter.git'
-  - 'https://github.com/integr8ly/grafana-operator.git'
-  - 'https://github.com/bitnami/bitnami-docker-grafana.git'
   - 'https://github.com/strimzi/strimzi-kafka-operator.git'
-  - 'https://github.com/redhat-cop/quay-operator.git'
   - 'https://github.com/CrunchyData/postgres-operator.git'
 
 #From the operator https://github.com/CrunchyData/postgres-operator/blob/REL_4_1/conf/postgres-operator/pgo.yaml#L7

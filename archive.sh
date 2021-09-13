@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PREF=ek8s
-ARCH_DIRS=(helm aarnet wget registry)
+ARCH_DIRS=(ocp-release)
 #ARCH_DIRS="registry/ "
 for source in ${ARCH_DIRS[@]}; do
   pushd /var/lib/import
@@ -12,5 +12,4 @@ for source in ${ARCH_DIRS[@]}; do
     sha256sum $part > $part.sha256sum
   done
 done
-#sha256sum $PREF.tar* > sha256.list
 

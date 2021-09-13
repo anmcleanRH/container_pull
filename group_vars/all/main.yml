@@ -4,6 +4,5 @@ archive_dir: "{{export_dir}}/archive"
 
 mirror_registry: 'registry.mirror:5000'
 git_mirror_action: download
-git_mirror_workdir: "{{ import_root }}/git-repos"
-git_export_archive: "{{ export_dir }}/git-repos.tar.gz"
+git_mirror_workdir: "{{ import_root }}/git"
 

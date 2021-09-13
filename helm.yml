@@ -4,7 +4,7 @@
 - hosts: localhost
   name: mirror helm binaries repos and dependencies
   vars: 
-    helm_dir: /var/lib/import/helm/
+    helm_dir: /var/lib/import/helm
     export_dir: /var/lib/export/
     cache_dir: "{{helm_dir}}/cache"
     pkg_dir: "{{helm_dir}}/pkgs"
@@ -12,15 +12,41 @@
     helm_exe: "{{bin_dir}}/linux-amd64/helm"
     helm_ver: v3.5.3
     repos:
+      - name: honestica
+        url: http://honestica.github.io/lifen-charts/
+        packages: 
+          - name: awx
+      - name: rke2
+        url: https://rke2-charts.rancher.io
+        packages:
+          - name: rke2-cilium
+          - name: rke2-kube-proxy
+          - name: rke2-metrics-server
+          - name: rke2-coredns
+          - name: rke2-ingress-nginx
       - name: prometheus-community
         url: https://prometheus-community.github.io/helm-charts
         packages: 
           - name: prometheus
+          - name: prometheus-blackbox-exporter
+      - name: haproxytech
+        url: https://haproxytech.github.io/helm-charts
+        packages:
+          - name: haproxy
+          - name: kubernetes-ingress
+      - name: coretex
+        url: https://cortexproject.github.io/cortex-helm-chart
+        packages:
+          - name: cortex
       - name: pure
         url: https://purestorage.github.io/pso-csi
         packages:
           - name: pure-pso
             args: '--set clusterID=test --set orchestrator.name=openshift  --set arrays.FlashArrays[0].MgmtEndPoint=test --set arrays.FlashArrays[0].APIToken=apitok'
+      - name: zalando
+        url: https://raw.githubusercontent.com/zalando/postgres-operator/master/charts/postgres-operator
+        packages:
+          - name: postgres-operator
       - name: bitnami
         url: https://charts.bitnami.com/bitnami
         packages: 
@@ -30,13 +56,20 @@
           - name: postgresql
           - name: postgresql-ha
           - name: elasticsearch
+            args: '--set global.kibanaEnabled=true'
+          - name: kibana
           - name: metallb
           - name: grafana
+          - name: jenkins
           - name: fluentd
           - name: common
           - name: kafka
+          - name: nginx
           - name: zookeeper
           - name: grafana-operator
+          - name: nginx-ingress-controller
+          - name: keycloak
+            args: '--set keycloakConfigCli.enabled=true'
       - name: ingress-nginx
         url: https://kubernetes.github.io/ingress-nginx
         packages:
@@ -92,15 +125,15 @@
         url: https://helm.cilium.io
         packages: 
          - name: cilium
+           args: "--set hubble.relay.enabled=true --set hubble.ui.enabled=true"
       - name: traefik
         url: https://helm.traefik.io/traefik
         packages:
           - name: traefik
       - name: grafana
-        url: https://grafana.github.com/helm-charts
+        url: https://grafana.github.io/helm-charts
         packages:
           - name: grafana
-          - name: fluent-bit
           - name: loki
           - name: loki-distributed
           - name: promtail
@@ -131,10 +164,10 @@
         - "{{ pkg_dir}}"
     - name: create import dir
       file:
-        path: "{{pkg_dir}}/{{ item.name }}"
+        path: "{{pkg_dir}}/{{ item.0.name }}/{{item.1.name}}"
         state: directory
         mode: 0755
-      loop: "{{ repos}}"
+      loop: "{{repos|subelements('packages')}}"
     - name: get binary
       # get_url has selinux issues on latest fedora
       shell:
@@ -155,13 +188,13 @@
       tags: repos   
     - name: get helm packages
       shell:
-        cmd: "{{helm_exe}} fetch {{ item.0.name}}/{{item.1.name }} --repository-cache {{cache_dir}}"
+        cmd: "{{helm_exe}} fetch {{ item.0.name}}/{{item.1.name }} --repository-cache {{cache_dir}} -d {{item.1.name }}"
         chdir: "{{pkg_dir}}/{{item.0.name}}"
       loop: "{{repos|subelements('packages')}}" 
       tags: repos
     - name: find dependant images
       shell:
-        cmd: "{{helm_exe }} template {{item.0.name}}/{{item.1.name}}* {{ item.1.args | default('') }} | grep -oP '(?<=image: ).*' | sort | uniq"
+        cmd: "{{helm_exe }} template {{item.0.name}}/{{item.1.name}}/{{item.1.name}}* {{ item.1.args | default('') }} | grep -oP '(?<=image: ).*' | sort | uniq | tr -d '\"'"
         chdir: "{{ pkg_dir }}"
       register: image_depends
       loop: "{{repos|subelements('packages')}}" 
@@ -177,15 +210,19 @@
       tags: repos
     - name: collect images
       set_fact:
-        images_to_mirror: "{{ (images_to_mirror | default([])) + [(item[1]| replace('\"',''))] }}"
-      loop: "{{image_depends.results|subelements('stdout_lines')|unique }}"
+        raw_images_to_mirror: "{{ (raw_images_to_mirror | default([])) + [(item[1]| replace('\"',''))] }}"
+      loop: "{{image_depends.results|subelements('stdout_lines')}}"
+    - name: remove sha from tags
+      set_fact:
+        images_to_mirror: "{{ (images_to_mirror | default([])) + [(item | regex_replace('(.*):(.*)@.*', '\\1:\\2'))] }}"
+      loop: "{{ raw_images_to_mirror }}"
         #    - name: collect more images
-        #      set_fact:
-        #        images_to_mirror: "{{ (images_to_mirror | default([])) + [(item[1]| replace('\"',''))] }}"
-        #      loop: "{{ subelements('stdout_lines',more_image_depends.results,skip_missing=true)|unique }}"
+        # set_fact:
+        #  images_to_mirror: "{{ (images_to_mirror | default([])) + [(item[1]| replace('\"',''))] }}"
+        #loop: "{{ subelements('stdout_lines',more_image_depends.results,skip_missing=true)|unique }}"
     - name:
       debug:
-        var: images_to_mirror
+        var: raw_images_to_mirror
         verbosity: 0
       tags: repos
 
