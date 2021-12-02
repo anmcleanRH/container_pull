@@ -34,6 +34,10 @@
         packages:
           - name: haproxy
           - name: kubernetes-ingress
+      - name: datastax
+        url: https://datastax.github.io/pulsar-helm-chart
+        packages:
+          - name: pulsar
       - name: coretex
         url: https://cortexproject.github.io/cortex-helm-chart
         packages:

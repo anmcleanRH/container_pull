@@ -8,6 +8,9 @@ git_repos:
     - https://github.com/purestorage/pso-csi.git
     - https://github.com/Wolskie/keycloak-attribute-mapper
     - https://github.com/keycloak/keycloak
+    - https://github.com/mhahl/assisted-service-helm.git
+    - https://github.com/openshift/assisted-service.git
+    - https://github.com/openshift-assisted/assisted-ui.git
     - https://github.com/openshift/source-to-image.git
     - https://github.com/openshift/cluster-samples-operator.git
     - https://github.com/aquasecurity/trivy-db.git

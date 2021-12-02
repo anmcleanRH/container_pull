@@ -1,11 +1,11 @@
 # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
-ocp_tag: '4.6.25'
-coreos_tag: '4.6.8'
-ocp_ver: '4.6'
+ocp_tag: '4.8.14'
+coreos_tag: '4.8.14'
+ocp_ver: '4.8'
 bin_path: "{{ import_root }}/bin"
 registry_path: "{{ import_root}}/registry"
-release_path: "{{import_root}}/ocp-release"
-olm_dir: "{{import_root}}/olm"
+release_path: "{{import_root}}/ocp-release/{{ ocp_tag }}"
+olm_dir: "{{import_root}}/olm/{{ocp_tag}}"
 # get pull secret from https://cloud.redhat.com/openshift/install/metal/user-provisioned
 auth_file: "/var/lib/import/plays/auth.json"
 operator_indexes: 
