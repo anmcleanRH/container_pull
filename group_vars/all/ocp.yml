@@ -1,7 +1,7 @@
 # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
-ocp_tag: '4.8.14'
-coreos_tag: '4.8.14'
-ocp_ver: '4.8'
+ocp_tag: '4.9.19'
+coreos_tag: '4.9.0'
+ocp_ver: '4.9'
 bin_path: "{{ import_root }}/bin"
 registry_path: "{{ import_root}}/registry"
 release_path: "{{import_root}}/ocp-release/{{ ocp_tag }}"
@@ -12,8 +12,8 @@ operator_indexes:
 # see https://access.redhat.com/support/cases/#/case/02729981
   - name: 'redhat-operator'
     image: "registry.redhat.io/redhat/redhat-operator-index:v{{ocp_ver}}"
-#  - name: 'certified-operator'
-#    image: "registry.redhat.io/redhat/certified-operator-index:v{{ocp_ver}}"
+  - name: 'certified-operator'
+    image: "registry.redhat.io/redhat/certified-operator-index:v{{ocp_ver}}"
  #- name: 'community-operator'
 #     image: "registry.redhat.io/redhat/community-operator-index@sha256:59cc56d927637850dbeea69f55e6ad28d3b634695db23f71089fcd16199f8ffc"
   #- name: 'redhat-marketplace'

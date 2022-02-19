@@ -28,7 +28,7 @@
         - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp_ver }}/{{coreos_tag}}/rhcos-metal.x86_64.raw.gz"
         - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp_ver }}/{{coreos_tag}}/rhcos-live-initramfs.x86_64.img"
         - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp_ver }}/{{coreos_tag}}/rhcos-live-kernel-x86_64"
-        - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp_ver }}/{{coreos_tag}}/rhcos-live-rootfs.x86_64"
+        - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp_ver }}/{{coreos_tag}}/rhcos-live-rootfs.x86_64.img"
         - "https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/{{ ocp_ver }}/{{coreos_tag}}/rhcos-live.x86_64.iso"
         - "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_tag }}/openshift-client-linux-{{ocp_tag}}.tar.gz"
         - "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_tag }}/openshift-client-windows-{{ocp_tag}}.zip"
@@ -76,13 +76,10 @@
       loop: "{{ operator_indexes }}"
       tags: 
         - olm
-    - name: mirror catalog refs
-      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_registry}}/{{item.image}} {{mirror_registry}}/{{item.name}}-{{ocp_tag}} -a {{auth_file}} --icsp-scope=registry --to-manifests={{olm_dir}}/{{item.name}} --index-filter-by-os=linux/amd64"
+    # with 4.9 it appears the dest is not parsed correctly {{mirror_registry}}/dddd/{{item.name}}-{{ocp_tag}} will result
+    # with images in {{mirror_registry}}/{{item.name}}-{{ocp_tag}}/
+    - name: mirror catalog refs 
+      shell: "{{bin_path}}/oc adm catalog mirror {{item.image}} {{mirror_registry}}/dddd/{{item.name}}:{{ocp_tag}} -a {{auth_file}} --icsp-scope=registry --to-manifests={{olm_dir}}/{{item.name}} --index-filter-by-os=linux/amd64 --max-components=4"
       tags: 
         - olm
       loop: "{{ operator_indexes}}"
-        #    - name: mirror images
-        #      shell: |
-        #        awk -F '[/=@:]' '{ if (NF==10) system("skopeo copy --all docker://"$1"/"$2"/"$3"@sha256:"$5" docker://registry.mirror:5000/"$1"/"$2":"$10" --authfile /var/lib/import/plays/auth.json")}' /var/lib/import/olm/{{item.name}}/mapping.txt 
-        #      tags: olm
-        #      loop: "{{ operator_indexes }}"

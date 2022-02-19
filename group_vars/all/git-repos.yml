@@ -5,16 +5,19 @@ git_repos:
     - 'https://github.com/cloud-bulldozer/ripsaw.git'
     - 'https://github.com/coreos/prometheus-operator.git'
     - 'https://github.com/strimzi/strimzi-kafka-operator.git'
-    - https://github.com/purestorage/pso-csi.git
-    - https://github.com/Wolskie/keycloak-attribute-mapper
-    - https://github.com/keycloak/keycloak
-    - https://github.com/mhahl/assisted-service-helm.git
-    - https://github.com/openshift/assisted-service.git
-    - https://github.com/openshift-assisted/assisted-ui.git
-    - https://github.com/openshift/source-to-image.git
-    - https://github.com/openshift/cluster-samples-operator.git
-    - https://github.com/aquasecurity/trivy-db.git
-    - https://github.com/aquasecurity/harbor-scanner-trivy.git
+    - 'https://github.com/cilium/cilium-olm.git'
+    - 'https://github.com/mhahl/ocp-install-config.git'
+    - 'https://github.com/mhahl/openshift4-cilium.git'
+    - 'https://github.com/purestorage/pso-csi.git'
+    - 'https://github.com/Wolskie/keycloak-attribute-mapper'
+    - 'https://github.com/keycloak/keycloak'
+    - 'https://github.com/mhahl/assisted-service-helm.git'
+    - 'https://github.com/openshift/assisted-service.git'
+    - 'https://github.com/openshift-assisted/assisted-ui.git'
+    - 'https://github.com/openshift/source-to-image.git'
+    - 'https://github.com/openshift/cluster-samples-operator.git'
+    - 'https://github.com/aquasecurity/trivy-db.git'
+    - 'https://github.com/aquasecurity/harbor-scanner-trivy.git'
   openstack:
     - https://github.com/openstack/heat.git
   ceph:
