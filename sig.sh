@@ -1,6 +1,6 @@
 #!/bin/bash
 #see https://docs.openshift.com/container-platform/4.5/updating/updating-restricted-network-cluster.html#update-oc-configmap-signature-verification_updating-restricted-network-cluster
-OCP_RELEASE_NUMBER=4.7.19
+OCP_RELEASE_NUMBER=4.9.19
 ARCH=x86_64
 DIGEST="$(/var/lib/import/bin/oc adm release info -a /var/lib/import/plays/auth.json quay.io/openshift-release-dev/ocp-release:${OCP_RELEASE_NUMBER}-${ARCH} | sed -n 's/Pull From: .*@//p')"
 DIGEST_ALGO="${DIGEST%%:*}"

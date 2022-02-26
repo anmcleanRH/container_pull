@@ -76,10 +76,22 @@
       loop: "{{ operator_indexes }}"
       tags: 
         - olm
+        - index
+    # to see the set of packages in an index
+    #   podman run -p50051:50051 -it registry.redhat.io/redhat/redhat-operator-index:v4.9
+    # then in another terminal
+    #   grpcurl -plaintext localhost:50051 api.Registry/ListPackages > redhat-olm-packages.out
+    # opm index prune does not work rootless
+    - name: prune index
+      shell: "sudo {{bin_path}}/opm index prune -f {{item.image}} -p {{item.packages|join(',')}} -t {{mirror_registry}}/olm/{{item.name}}-index:{{ocp_tag}}; sudo podman push {{mirror_registry}}/olm/{{item.name}}-index:{{ocp_tag}}"
+      loop: "{{ operator_indexes }}"
+      tags: 
+        - olm
+        - index
     # with 4.9 it appears the dest is not parsed correctly {{mirror_registry}}/dddd/{{item.name}}-{{ocp_tag}} will result
     # with images in {{mirror_registry}}/{{item.name}}-{{ocp_tag}}/
     - name: mirror catalog refs 
-      shell: "{{bin_path}}/oc adm catalog mirror {{item.image}} {{mirror_registry}}/dddd/{{item.name}}:{{ocp_tag}} -a {{auth_file}} --icsp-scope=registry --to-manifests={{olm_dir}}/{{item.name}} --index-filter-by-os=linux/amd64 --max-components=4"
+      shell: "{{bin_path}}/oc adm catalog mirror {{mirror_registry}}/olm/{{item.name}}-index:{{ocp_tag}} {{mirror_registry}}/olm-mirror -a {{auth_file}} --icsp-scope=registry --to-manifests={{olm_dir}}/{{item.name}} --index-filter-by-os=linux/amd64 --max-components=4"
       tags: 
         - olm
       loop: "{{ operator_indexes}}"
