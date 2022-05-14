@@ -64,6 +64,9 @@
           - name: kibana
           - name: metallb
           - name: grafana
+          - name: memcached
+          - name: memcached-queries
+          - name: memcached-metadata
           - name: jenkins
           - name: fluentd
           - name: common
@@ -87,6 +90,11 @@
           - name: kibana
           - name: logstash
           - name: metricbeat
+      - name: grafana
+        url: https://grafana.github.io/helm-charts
+        packages:
+          - name: mimir-distributed
+          - name: grafana
       - name: gitlab
         url: https://charts.gitlab.io
         packages:
