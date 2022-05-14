@@ -1,5 +1,5 @@
 # coreos boot media doesnt have point releases, once 4.3 is out its not updated till 4.4
-ocp_tag: '4.9.21'
+ocp_tag: '4.9.29'
 coreos_tag: '4.9.0'
 ocp_ver: '4.9'
 bin_path: "{{ import_root }}/bin"
@@ -9,7 +9,6 @@ olm_dir: "{{import_root}}/olm/{{ocp_tag}}"
 # get pull secret from https://cloud.redhat.com/openshift/install/metal/user-provisioned
 auth_file: "/var/lib/import/plays/auth.json"
 operator_indexes: 
-# see https://access.redhat.com/support/cases/#/case/02729981
   - name: 'redhat-operator'
     image: "registry.redhat.io/redhat/redhat-operator-index:v{{ocp_ver}}"
     packages:
@@ -24,6 +23,9 @@ operator_indexes:
       - kubevirt-hyperconverged
       - local-storage-operator
       - metallb-operator
+      - openshift-gitops-operator
+      - openshift-jenkins-operator
+      - openshift-pipelines-operator-rh
   - name: 'certified-operator'
     image: "registry.redhat.io/redhat/certified-operator-index:v{{ocp_ver}}"
     packages:
@@ -36,28 +38,24 @@ operator_indexes:
       - openshiftartifactoryha-operator
       - portworx-certified
       - sysdig-certified
- #- name: 'community-operator'
-#     image: "registry.redhat.io/redhat/community-operator-index@sha256:59cc56d927637850dbeea69f55e6ad28d3b634695db23f71089fcd16199f8ffc"
-  #- name: 'redhat-marketplace'
-  #  image: "registry.redhat.io/redhat/redhat-marketplace-index:v{{ocp_ver}}"
+        
+  - name: 'community-operator'
+    image: "registry.redhat.io/redhat/community-operator-index:v{{ocp_ver}}"
+    packages:
+      - eclipse-che
+      - portworkx-essentials
+      - oapdp-operator
+      - node-healthcheck-operator
+      - namespace-configuration-operator
+      - keycloak-operator
+      - prometheus-exporter-operator
+      - argocd-operator
 
 ocp_image_repos:
   - name: 'samples-operator'
     source: "https://github.com/openshift/cluster-samples-operator.git"
     branch: "release-{{ ocp_ver }}"
     files: []
-    path: 'tmp/build/assets/operator/ocp-x86_64/'
+    path: 'assets/operator/ocp-x86_64/'
 
-# extra images that are handy
-ocp_images:
- #
-  - "registry.redhat.io/rhel7/rhel-atomic:latest"
-  - "registry.redhat.io/rhel7/rhel:latest"
-  - "registry.redhat.io/rhscl/s2i-base-rhel7:latest"
-  - "registry.redhat.io/rhscl/s2i-core-rhel7:latest"
-  - "registry.redhat.io/openjdk/openjdk-11-rhel7:latest"
-  - "registry.redhat.io/openjdk/openjdk-11-rhel8:latest"
-  - "registry.redhat.io/openjdk/openjdk-8-rhel8:latest"
-  - "registry.access.redhat.com/rhceph/rhceph-3-rhel7:3"
-  - "registry.access.redhat.com/rhceph/rhceph-3-dashboard-rhel7:3"
 
